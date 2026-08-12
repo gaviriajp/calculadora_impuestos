@@ -1,7 +1,3 @@
-# Calculadora de Impuestos de Venta
-
-Aplicación desarrollada en Python para calcular el valor total a pagar por una compra, discriminando los impuestos aplicables según la categoría del producto.
-
 ## Integrantes
 
 * **Juan Pablo Gaviria Franco**
@@ -13,7 +9,6 @@ La aplicación permite ingresar el precio de un producto, seleccionar la categor
 
 El sistema también permite agregar el impuesto correspondiente a las bolsas plásticas cuando la compra las incluye.
 
-El proyecto fue desarrollado como parte de la asignatura **Lenguajes de Programación y Código Limpio** de la **Universidad de Medellín**.
 
 ## Funcionalidades
 
@@ -27,11 +22,7 @@ La aplicación permite trabajar con las siguientes categorías:
 * **Impuesto a licores**
 * **Impuesto de bolsas plásticas**
 
-El sistema discrimina los impuestos y muestra el total final de la compra.
-
 ## Entradas
-
-El programa recibe los siguientes datos:
 
 1. **Precio del producto**
 
@@ -108,20 +99,3 @@ Entre ellas:
 * Ingresar una cantidad inválida de bolsas.
 
 Cuando se presenta una situación inválida, el programa muestra un mensaje indicando el problema.
-
-## Ejecución de la aplicación
-
-Para ejecutar la aplicación desde la terminal, ubicarse en la carpeta del proyecto y ejecutar:
-
-```bash
-python calculadora_impuestos.py
-```
-
-La aplicación mostrará el menú principal:
-
-```text
-===== CALCULADORA DE IMPUESTOS DE VENTA =====
-
-1. Calcular impuestos de una compra
-2. Salir
-```
