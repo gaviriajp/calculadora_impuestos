@@ -1,29 +1,13 @@
-# calculadora_impuestos.py
-#
-# Calculadora de Impuestos de Venta
-#
-# Universidad de Medellin
-# Lenguajes de Programacion y Codigo Limpio
-
-
-# ============================================================
-# CONSTANTES
-# ============================================================
-
 TARIFA_IVA_19 = 0.19
 TARIFA_IVA_5 = 0.05
 TARIFA_INC = 0.08
 TARIFA_LICOR = 0.25
 
-VALOR_BOLSA = 50
+VALOR_BOLSA = 73
 
 PRECIO_MINIMO = 1
 PRECIO_MAXIMO = 1_000_000_000
 
-
-# ============================================================
-# EXCEPCIONES
-# ============================================================
 
 class PrecioInvalidoError(Exception):
     """
@@ -41,23 +25,12 @@ class ImpuestoInvalidoError(Exception):
     pass
 
 
-# ============================================================
-# PROCESAMIENTO DEL PRECIO
-# ============================================================
-
 def procesar_precio(texto):
     """
     Valida y convierte el precio ingresado como texto
     a un numero.
-
-    Valida:
-    - Campo vacio.
-    - Caracteres no numericos.
-    - Precio menor o igual a cero.
-    - Precio superior al limite permitido.
     """
 
-    # CP-09: precio vacio
     if texto is None or texto.strip() == "":
         raise PrecioInvalidoError(
             "El precio es obligatorio, no puede quedar vacio."
@@ -65,7 +38,6 @@ def procesar_precio(texto):
 
     texto_limpio = texto.strip().replace(",", "")
 
-    # CP-08: letras en el precio
     try:
         precio = float(texto_limpio)
     except ValueError:
@@ -73,13 +45,11 @@ def procesar_precio(texto):
             "El precio debe ser un valor numerico."
         )
 
-    # CP-07: precio negativo o cero
     if precio <= 0:
         raise PrecioInvalidoError(
             "El precio debe ser mayor que cero."
         )
 
-    # CP-04: limite superior
     if precio < PRECIO_MINIMO or precio > PRECIO_MAXIMO:
         raise PrecioInvalidoError(
             "El precio debe estar entre "
@@ -91,10 +61,6 @@ def procesar_precio(texto):
 
     return precio
 
-
-# ============================================================
-# CALCULO DE IMPUESTOS
-# ============================================================
 
 def calcular_impuestos(
     precio,
@@ -109,35 +75,13 @@ def calcular_impuestos(
 ):
     """
     Calcula los impuestos y el total de una compra.
-
-    El producto puede tener una sola categoria de impuesto
-    principal:
-
-    - IVA 19%
-    - IVA 5%
-    - Exento
-    - Excluido
-    - INC
-    - Licor
-
-    El impuesto de bolsas plasticas puede aplicarse
-    adicionalmente.
     """
-
-    # --------------------------------------------------------
-    # CP-10:
-    # No se permite IVA 5% e IVA 19% simultaneamente.
-    # --------------------------------------------------------
 
     if iva19 and iva5:
         raise ImpuestoInvalidoError(
             "No se puede seleccionar IVA 5% e IVA 19% "
             "al mismo tiempo."
         )
-
-    # --------------------------------------------------------
-    # Contar las categorias principales seleccionadas.
-    # --------------------------------------------------------
 
     cantidad_seleccionados = 0
 
@@ -152,20 +96,11 @@ def calcular_impuestos(
         if opcion:
             cantidad_seleccionados += 1
 
-    # --------------------------------------------------------
-    # CP-05:
-    # No se selecciono ningun impuesto.
-    # --------------------------------------------------------
-
     if cantidad_seleccionados == 0:
         raise ImpuestoInvalidoError(
             "Debe seleccionar al menos un tipo de impuesto "
             "(o Exento/Excluido)."
         )
-
-    # --------------------------------------------------------
-    # Solo puede existir una categoria principal.
-    # --------------------------------------------------------
 
     if cantidad_seleccionados > 1:
         raise ImpuestoInvalidoError(
@@ -173,12 +108,7 @@ def calcular_impuestos(
             "de impuesto principal por producto."
         )
 
-    # --------------------------------------------------------
-    # Calcular impuesto principal.
-    # --------------------------------------------------------
-
     if iva19:
-
         nombre_impuesto = "IVA 19%"
         valor_impuesto = round(
             precio * TARIFA_IVA_19,
@@ -186,7 +116,6 @@ def calcular_impuestos(
         )
 
     elif iva5:
-
         nombre_impuesto = "IVA 5%"
         valor_impuesto = round(
             precio * TARIFA_IVA_5,
@@ -194,7 +123,6 @@ def calcular_impuestos(
         )
 
     elif inc:
-
         nombre_impuesto = "Impuesto Nacional al Consumo"
         valor_impuesto = round(
             precio * TARIFA_INC,
@@ -202,7 +130,6 @@ def calcular_impuestos(
         )
 
     elif licor:
-
         nombre_impuesto = "Impuesto a licores"
         valor_impuesto = round(
             precio * TARIFA_LICOR,
@@ -210,21 +137,12 @@ def calcular_impuestos(
         )
 
     elif exento:
-
         nombre_impuesto = "Exento"
         valor_impuesto = 0.0
 
     else:
-
         nombre_impuesto = "Excluido"
         valor_impuesto = 0.0
-
-    # --------------------------------------------------------
-    # Impuesto de bolsas plasticas.
-    #
-    # Este impuesto es independiente del impuesto principal.
-    # Por eso puede combinarse con IVA, INC, Exento o Excluido.
-    # --------------------------------------------------------
 
     valor_bolsas = 0.0
 
@@ -241,18 +159,10 @@ def calcular_impuestos(
             2
         )
 
-    # --------------------------------------------------------
-    # Total
-    # --------------------------------------------------------
-
     total = round(
         precio + valor_impuesto + valor_bolsas,
         2
     )
-
-    # --------------------------------------------------------
-    # Resultado
-    # --------------------------------------------------------
 
     resultado = {
         "precio_base": precio,
@@ -263,19 +173,23 @@ def calcular_impuestos(
     }
 
     return resultado
-# ============================================================
-# INTERFAZ DE CONSOLA
-# ============================================================
+
 
 def mostrar_resultado(resultado):
+
     print("\n========================================")
     print("       DETALLE DE LA COMPRA")
     print("========================================")
 
-    print("Precio base:       $%.2f" % resultado["precio_base"])
+    print(
+        "Precio base:       $%.2f"
+        % resultado["precio_base"]
+    )
+
     print(
         (resultado["nombre_impuesto"] + ":").ljust(20)
-        + "$%.2f" % resultado["valor_impuesto"]
+        + "$%.2f"
+        % resultado["valor_impuesto"]
     )
 
     if resultado["valor_bolsas"] > 0:
@@ -285,15 +199,21 @@ def mostrar_resultado(resultado):
         )
 
     print("----------------------------------------")
+
     print(
         "TOTAL A PAGAR:     $%.2f"
         % resultado["total"]
     )
+
     print("========================================\n")
 
 
 def pedir_si_no(pregunta):
-    respuesta = input(pregunta + " (s/n): ").strip().lower()
+
+    respuesta = input(
+        pregunta + " (s/n): "
+    ).strip().lower()
+
     return respuesta == "s"
 
 
@@ -302,10 +222,6 @@ def ejecutar_calculo():
     print("\n========================================")
     print("      CALCULADORA DE IMPUESTOS")
     print("========================================")
-
-    # --------------------------------------------------------
-    # Precio
-    # --------------------------------------------------------
 
     texto_precio = input(
         "Ingrese el precio del producto: "
@@ -318,10 +234,6 @@ def ejecutar_calculo():
         print("\nError:", error)
         return
 
-    # --------------------------------------------------------
-    # Categoria del impuesto
-    # --------------------------------------------------------
-
     print("\nSeleccione la categoria del producto:")
     print("1. IVA 19%")
     print("2. IVA 5%")
@@ -330,7 +242,9 @@ def ejecutar_calculo():
     print("5. Impuesto Nacional al Consumo (INC)")
     print("6. Impuesto a licores")
 
-    categoria = input("Seleccione una opcion: ").strip()
+    categoria = input(
+        "Seleccione una opcion: "
+    ).strip()
 
     iva19 = categoria == "1"
     iva5 = categoria == "2"
@@ -339,17 +253,9 @@ def ejecutar_calculo():
     inc = categoria == "5"
     licor = categoria == "6"
 
-    # --------------------------------------------------------
-    # Validar opcion de categoria
-    # --------------------------------------------------------
-
     if categoria not in ("1", "2", "3", "4", "5", "6"):
         print("\nError: debe seleccionar una categoria valida.")
         return
-
-    # --------------------------------------------------------
-    # Bolsas plasticas
-    # --------------------------------------------------------
 
     usa_bolsas = pedir_si_no(
         "\n¿La compra incluye bolsas plasticas?"
@@ -373,10 +279,6 @@ def ejecutar_calculo():
             )
             return
 
-    # --------------------------------------------------------
-    # Calcular
-    # --------------------------------------------------------
-
     try:
 
         resultado = calcular_impuestos(
@@ -392,13 +294,8 @@ def ejecutar_calculo():
         )
 
     except ImpuestoInvalidoError as error:
-
         print("\nError:", error)
         return
-
-    # --------------------------------------------------------
-    # Mostrar resultado
-    # --------------------------------------------------------
 
     mostrar_resultado(resultado)
 
@@ -418,25 +315,18 @@ def menu_principal():
         ).strip()
 
         if opcion == "1":
-
             ejecutar_calculo()
 
         elif opcion == "2":
-
             print("\nHasta luego.")
             break
 
         else:
-
             print(
                 "\nOpcion invalida. "
                 "Seleccione 1 o 2."
             )
 
-
-# ============================================================
-# INICIO DEL PROGRAMA
-# ============================================================
 
 if __name__ == "__main__":
     menu_principal()
