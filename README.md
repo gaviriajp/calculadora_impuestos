@@ -125,6 +125,3 @@ La aplicación mostrará el menú principal:
 1. Calcular impuestos de una compra
 2. Salir
 ```
-
-
-##
