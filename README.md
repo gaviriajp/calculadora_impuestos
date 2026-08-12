@@ -98,4 +98,3 @@ Entre ellas:
 * Seleccionar simultáneamente IVA 5% e IVA 19%.
 * Ingresar una cantidad inválida de bolsas.
 
-Cuando se presenta una situación inválida, el programa muestra un mensaje indicando el problema.
