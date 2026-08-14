@@ -1,6 +1,8 @@
-import unittest
+import sys
+sys.path.append("src")
 
-import calculadora_impuestos as calc
+import unittest
+from model import calculadora_impuestos as calc
 
 
 class CalculadoraImpuestosTest(unittest.TestCase):
