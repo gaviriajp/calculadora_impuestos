@@ -1,5 +1,5 @@
-TARIFA_IVA_19 = 0.19
-TARIFA_IVA_5 = 0.05
+TARIFA_IVA_GENERAL = 0.19
+TARIFA_IVA_REDUCIDO = 0.05
 TARIFA_INC = 0.08
 TARIFA_LICOR = 0.25
 
@@ -94,14 +94,14 @@ def calcular_impuestos(
     if iva19:
         nombre_impuesto = "IVA 19%"
         valor_impuesto = round(
-            precio * TARIFA_IVA_19,
+            precio * TARIFA_IVA_GENERAL,
             2
         )
 
     elif iva5:
         nombre_impuesto = "IVA 5%"
         valor_impuesto = round(
-            precio * TARIFA_IVA_5,
+            precio * TARIFA_IVA_REDUCIDO,
             2
         )
 
