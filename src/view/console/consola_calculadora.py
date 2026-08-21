@@ -9,6 +9,8 @@ sys.path.insert(
 )
 
 from model import calculadora_impuestos as calc
+
+
 def mostrar_resultado(resultado):
     print("\n========================================")
     print("       DETALLE DE LA COMPRA")
@@ -42,11 +44,18 @@ def mostrar_resultado(resultado):
 
 
 def pedir_si_no(pregunta):
-    respuesta = input(
-        pregunta + " (s/n): "
-    ).strip().lower()
+    while True:
+        respuesta = input(
+            pregunta + " (s/n): "
+        ).strip().lower()
 
-    return respuesta == "s"
+        if respuesta == "s":
+            return True
+
+        if respuesta == "n":
+            return False
+
+        print("Error: debe responder 's' o 'n'.")
 
 
 def ejecutar_calculo():
@@ -78,7 +87,10 @@ def ejecutar_calculo():
     ).strip()
 
     if categoria not in ("1", "2", "3", "4", "5", "6"):
-        print("\nError: debe seleccionar una categoria valida.")
+        print(
+            "\nError: debe seleccionar "
+            "una categoria valida."
+        )
         return
 
     iva19 = categoria == "1"
@@ -88,13 +100,13 @@ def ejecutar_calculo():
     inc = categoria == "5"
     licor = categoria == "6"
 
-    usa_bolsas = pedir_si_no(
+    incluye_bolsas = pedir_si_no(
         "\n¿La compra incluye bolsas plasticas?"
     )
 
     cantidad_bolsas = 0
 
-    if usa_bolsas:
+    if incluye_bolsas:
         texto_cantidad = input(
             "Ingrese la cantidad de bolsas: "
         ).strip()
@@ -118,7 +130,7 @@ def ejecutar_calculo():
             excluido=excluido,
             inc=inc,
             licor=licor,
-            bolsas=usa_bolsas,
+            bolsas=incluye_bolsas,
             cantidad_bolsas=cantidad_bolsas
         )
 
