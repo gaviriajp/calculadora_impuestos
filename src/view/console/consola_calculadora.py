@@ -11,6 +11,23 @@ sys.path.insert(
 from model import calculadora_impuestos as calc
 
 
+OPCION_IVA_19 = "1"
+OPCION_IVA_5 = "2"
+OPCION_EXENTO = "3"
+OPCION_EXCLUIDO = "4"
+OPCION_INC = "5"
+OPCION_LICOR = "6"
+
+OPCIONES_VALIDAS = (
+    OPCION_IVA_19,
+    OPCION_IVA_5,
+    OPCION_EXENTO,
+    OPCION_EXCLUIDO,
+    OPCION_INC,
+    OPCION_LICOR
+)
+
+
 def mostrar_resultado(resultado):
     print("\n========================================")
     print("       DETALLE DE LA COMPRA")
@@ -55,7 +72,9 @@ def pedir_si_no(pregunta):
         if respuesta == "n":
             return False
 
-        print("Error: debe responder 's' o 'n'.")
+        print(
+            "Error: debe responder 's' o 'n'."
+        )
 
 
 def ejecutar_calculo():
@@ -68,7 +87,9 @@ def ejecutar_calculo():
     )
 
     try:
-        precio = calc.procesar_precio(texto_precio)
+        precio = calc.procesar_precio(
+            texto_precio
+        )
 
     except calc.PrecioInvalidoError as error:
         print("\nError:", error)
@@ -86,19 +107,19 @@ def ejecutar_calculo():
         "Seleccione una opcion: "
     ).strip()
 
-    if categoria not in ("1", "2", "3", "4", "5", "6"):
+    if categoria not in OPCIONES_VALIDAS:
         print(
             "\nError: debe seleccionar "
             "una categoria valida."
         )
         return
 
-    iva19 = categoria == "1"
-    iva5 = categoria == "2"
-    exento = categoria == "3"
-    excluido = categoria == "4"
-    inc = categoria == "5"
-    licor = categoria == "6"
+    iva19 = categoria == OPCION_IVA_19
+    iva5 = categoria == OPCION_IVA_5
+    exento = categoria == OPCION_EXENTO
+    excluido = categoria == OPCION_EXCLUIDO
+    inc = categoria == OPCION_INC
+    licor = categoria == OPCION_LICOR
 
     incluye_bolsas = pedir_si_no(
         "\n¿La compra incluye bolsas plasticas?"
@@ -112,7 +133,9 @@ def ejecutar_calculo():
         ).strip()
 
         try:
-            cantidad_bolsas = int(texto_cantidad)
+            cantidad_bolsas = int(
+                texto_cantidad
+            )
 
         except ValueError:
             print(
