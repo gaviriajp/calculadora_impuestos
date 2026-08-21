@@ -56,7 +56,7 @@ def calcular_impuestos(
     exento=False,
     excluido=False,
     inc=False,
-    licor=False,
+    impuesto_licor=False,
     bolsas=False,
     cantidad_bolsas=0
 ):
@@ -74,7 +74,7 @@ def calcular_impuestos(
         exento,
         excluido,
         inc,
-        licor
+        impuesto_licor
     ):
         if opcion:
             cantidad_seleccionados += 1
@@ -112,7 +112,7 @@ def calcular_impuestos(
             2
         )
 
-    elif licor:
+    elif impuesto_licor:
         nombre_impuesto = "Impuesto a licores"
         valor_impuesto = round(
             precio * TARIFA_LICOR,
