@@ -14,3 +14,7 @@ venv/
 Thumbs.db
 dist
 build
+
+# Archivos de configuracion de base de datos con credenciales
+secret_config.py
+SecretConfig.py
