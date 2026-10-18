@@ -163,6 +163,61 @@ def ejecutar_calculo():
 
     mostrar_resultado(resultado)
 
+    guardar = pedir_si_no("¿Desea guardar este cálculo en la base de datos?")
+    if guardar:
+        id_calculo = input("Ingrese un identificador para el cálculo (ej. CALC-001): ").strip()
+        while not id_calculo:
+            print("El identificador no puede estar vacío.")
+            id_calculo = input("Ingrese un identificador: ").strip()
+
+        try:
+            from model.calculo_impuesto import CalculoImpuesto
+            from controller.calculos_controller import CalculosController
+
+            nuevo_calculo = CalculoImpuesto(
+                id_calculo=id_calculo,
+                precio_base=resultado["precio_base"],
+                nombre_impuesto=resultado["nombre_impuesto"],
+                valor_impuesto=resultado["valor_impuesto"],
+                cantidad_bolsas=cantidad_bolsas,
+                valor_bolsas=resultado["valor_bolsas"],
+                total=resultado["total"],
+            )
+            CalculosController.insertar(nuevo_calculo)
+            print(f"\n¡Cálculo '{id_calculo}' guardado exitosamente en la base de datos!")
+        except Exception as error:
+            print(f"\nError al guardar en la base de datos: {error}")
+
+
+def ejecutar_busqueda():
+    print("\n========================================")
+    print("   BUSCAR CÁLCULO EN LA BASE DE DATOS")
+    print("========================================")
+    id_busqueda = input("Ingrese el ID del cálculo a buscar: ").strip()
+    if not id_busqueda:
+        print("\nError: el identificador no puede estar vacío.")
+        return
+
+    try:
+        from controller.calculos_controller import CalculosController
+
+        calculo = CalculosController.buscar_calculo(id_busqueda)
+        if calculo is None:
+            print(f"\nNo se encontró ningún cálculo con el ID '{id_busqueda}'.")
+            return
+
+        resultado = {
+            "precio_base": calculo.precio_base,
+            "nombre_impuesto": calculo.nombre_impuesto,
+            "valor_impuesto": calculo.valor_impuesto,
+            "valor_bolsas": calculo.valor_bolsas,
+            "total": calculo.total,
+        }
+        print(f"\n--- INFORMACIÓN DEL REGISTRO [{calculo.id_calculo}] ---")
+        mostrar_resultado(resultado)
+    except Exception as error:
+        print(f"\nError al consultar la base de datos: {error}")
+
 
 def menu_principal():
     while True:
@@ -170,7 +225,8 @@ def menu_principal():
         print("   CALCULADORA DE IMPUESTOS DE VENTA")
         print("========================================")
         print("1. Calcular impuestos de una compra")
-        print("2. Salir")
+        print("2. Buscar cálculo en la base de datos")
+        print("3. Salir")
 
         opcion = input(
             "Seleccione una opcion: "
@@ -180,15 +236,18 @@ def menu_principal():
             ejecutar_calculo()
 
         elif opcion == "2":
+            ejecutar_busqueda()
+
+        elif opcion == "3":
             print("\nHasta luego.")
             break
 
         else:
             print(
                 "\nOpcion invalida. "
-                "Seleccione 1 o 2."
+                "Seleccione 1, 2 o 3."
             )
 
 
 if __name__ == "__main__":
-    menu_principal()
+    menu_principal()
