@@ -655,3 +655,63 @@ python src/view/console/consola_calculadora.py
 ```
 
 ---
+
+## Persistencia y Base de Datos (PostgreSQL)
+
+El proyecto implementa el patrón MVC con persistencia en PostgreSQL, siguiendo la arquitectura de referencia con Modelo ORM artesanal, Controlador y Vistas.
+
+### Prerrequisitos de Base de Datos
+
+Instale el paquete `psycopg2` (o `psycopg2-binary`):
+
+```bash
+pip install psycopg2-binary
+```
+
+Asegúrese de tener un servidor PostgreSQL en ejecución y sus respectivos datos de acceso.
+
+### Configuración de Conexión (`secret_config.py`)
+
+1. Copie el archivo de plantilla `secret_config_sample.py` como `secret_config.py`:
+   ```bash
+   cp secret_config_sample.py secret_config.py
+   ```
+2. Abra `secret_config.py` y complete los valores correspondientes a su base de datos:
+   - `PGHOST`: Host de conexión (ej. `localhost`).
+   - `PGDATABASE`: Nombre de la base de datos (ej. `calculadora_impuestos`).
+   - `PGUSER`: Usuario de la base de datos (ej. `postgres`).
+   - `PGPASSWORD`: Contraseña del usuario.
+   - `PGPORT`: Puerto del servidor (ej. `5432`).
+
+> **Seguridad**: El archivo `secret_config.py` se encuentra listado en `.gitignore` y **nunca** debe subirse al repositorio remoto con credenciales reales.
+
+### Creación y Borrado de Tablas
+
+Se incluyen scripts SQL en la carpeta `sql/`:
+- `sql/crear-calculos.sql`: Crea la tabla `calculos` si no existe.
+- `sql/borrar-calculos.sql`: Elimina la tabla `calculos` si existe.
+
+El controlador `CalculosController` incluye los métodos `crear_tabla()` y `borrar_tabla()` que ejecutan automáticamente estos scripts.
+
+### Pruebas Unitarias de Base de Datos (con Test Fixture)
+
+El archivo `tests/test_calculos.py` incluye un `Test Fixture` (`setUpClass`) que reinicia y crea las tablas automáticamente antes de iniciar las pruebas, garantizando un ambiente limpio. Además, contiene casos de prueba normales y de error para inserción y búsqueda:
+
+Para ejecutar las pruebas:
+
+```bash
+python -m unittest tests/test_calculos.py
+```
+
+### Ejecución de la Interfaz con Persistencia
+
+Para interactuar con la aplicación de consola con opciones de inserción y búsqueda en la base de datos:
+
+```bash
+python src/view/console/consola_calculadora.py
+```
+
+En el menú principal encontrará las opciones:
+1. **Calcular impuestos de una compra**: Realiza el desglose de impuestos y permite guardar el registro en la base de datos.
+2. **Buscar cálculo en la base de datos**: Permite consultar cualquier cálculo almacenado previamente ingresando su ID.
+3. **Salir**: Finaliza la ejecución.
