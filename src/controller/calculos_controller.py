@@ -25,14 +25,19 @@ class CalculosController:
     @classmethod
     def obtener_cursor(cls):
         """Crea la conexión a la base de datos PostgreSQL y retorna un cursor."""
-        connection = psycopg2.connect(
-            database=secret_config.PGDATABASE,
-            user=secret_config.PGUSER,
-            password=secret_config.PGPASSWORD,
-            host=secret_config.PGHOST,
-            port=secret_config.PGPORT,
-        )
+        params = {
+            "database": secret_config.PGDATABASE,
+            "user": secret_config.PGUSER,
+            "password": secret_config.PGPASSWORD,
+            "host": secret_config.PGHOST,
+            "port": secret_config.PGPORT,
+        }
+        if hasattr(secret_config, "PGSSLMODE") and secret_config.PGSSLMODE:
+            params["sslmode"] = secret_config.PGSSLMODE
+
+        connection = psycopg2.connect(**params)
         return connection.cursor()
+
 
     @classmethod
     def crear_tabla(cls):
