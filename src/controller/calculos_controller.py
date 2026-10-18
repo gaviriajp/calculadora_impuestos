@@ -16,7 +16,6 @@ except ImportError:
         secret_config = None
 
 
-
 class CalculosController:
     """
     Controlador encargado de gestionar las operaciones de base de datos
