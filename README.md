@@ -29,26 +29,45 @@ La lógica de negocio se encuentra separada de las interfaces de usuario, permit
 
 ```text
 calculadora_impuestos/
+├── secret_config_sample.py
+│   # Plantilla con variables de conexión a PostgreSQL
+│
+├── sql/
+│   ├── crear-calculos.sql
+│   └── borrar-calculos.sql
+│       # Scripts DDL para gestión de tablas
+│
 ├── src/
 │   ├── model/
 │   │   ├── __init__.py
-│   │   └── calculadora_impuestos.py
-│   │       # Lógica de negocio, cálculos y validaciones
+│   │   ├── calculadora_impuestos.py
+│   │   │   # Lógica de cálculo de impuestos y validaciones
+│   │   └── calculo_impuesto.py
+│   │       # Clase del Modelo ORM con método is_equal
+│   │
+│   ├── controller/
+│   │   ├── __init__.py
+│   │   └── calculos_controller.py
+│   │       # Controlador para crear/borrar tablas, insertar y consultar
 │   │
 │   └── view/
 │       ├── __init__.py
-│       ├── Main.py
-│       │   # Interfaz gráfica desarrollada con Kivy
+│       ├── console/
+│       │   ├── __init__.py
+│       │   └── consola_calculadora.py
+│       │       # Interfaz de consola con opciones de guardar y buscar en BD
 │       │
-│       └── console/
+│       └── gui/
 │           ├── __init__.py
-│           └── consola_calculadora.py
-│               # Interfaz de consola
+│           └── calculadora_gui.py
+│               # Interfaz gráfica (Kivy) con opciones de guardar y buscar en BD
 │
 ├── tests/
 │   ├── __init__.py
-│   └── test_calculadora.py
-│       # Pruebas unitarias del model
+│   ├── test_calculadora.py
+│   │   # Pruebas unitarias de la lógica de cálculo
+│   └── test_calculos.py
+│       # Pruebas unitarias con Test Fixture (setUpClass) para la BD
 │
 └── doc/
     ├── Casos de prueba calculadora impuestos.xlsx
@@ -703,15 +722,33 @@ Para ejecutar las pruebas:
 python -m unittest tests/test_calculos.py
 ```
 
-### Ejecución de la Interfaz con Persistencia
+### Ejecución de las Interfaces con Persistencia
 
-Para interactuar con la aplicación de consola con opciones de inserción y búsqueda en la base de datos:
+#### 1. Interfaz de Consola
+Permite interactuar directamente desde la terminal con opciones de cálculo, guardado y búsqueda:
 
 ```bash
 python src/view/console/consola_calculadora.py
 ```
 
 En el menú principal encontrará las opciones:
-1. **Calcular impuestos de una compra**: Realiza el desglose de impuestos y permite guardar el registro en la base de datos.
+1. **Calcular impuestos de una compra**: Realiza el desglose de impuestos y pregunta al usuario si desea guardar el registro en PostgreSQL especificando un ID.
 2. **Buscar cálculo en la base de datos**: Permite consultar cualquier cálculo almacenado previamente ingresando su ID.
-3. **Salir**: Finaliza la ejecución.
+3. **Salir**: Finaliza la ejecución.
+
+#### 2. Interfaz Gráfica (Kivy)
+Permite realizar las operaciones visualmente con campos dedicados para interactuar con PostgreSQL:
+
+```bash
+python src/view/gui/calculadora_gui.py
+```
+O también desde la raíz:
+```bash
+python calcula_impuestos.py
+```
+
+Funciones de persistencia en la GUI:
+- **ID del cálculo (BD)**: Ingrese un identificador único (ej. `CALC-001`).
+- **Botón "Guardar en BD"**: Inserta el cálculo actual en la base de datos PostgreSQL.
+- **Sección "Buscar ID en BD"**: Ingrese el ID del cálculo y presione el botón **"Buscar"** para recuperar los datos desde la base de datos y cargarlos en pantalla.
+
