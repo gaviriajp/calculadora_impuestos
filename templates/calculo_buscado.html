@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado de Búsqueda de Cálculo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #0b3954;
+            margin-top: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f0f4f8;
+            width: 45%;
+        }
+        .total-row {
+            background-color: #e8f5e9;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+        .btn-back {
+            display: inline-block;
+            background-color: #087e8b;
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .btn-back:hover {
+            background-color: #055a63;
+        }
+        .error-box {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Información del Cálculo de Impuesto</h2>
+
+    {% if calculo %}
+    <table>
+        <tr>
+            <th>Identificador (ID)</th>
+            <td>{{ calculo.id_calculo }}</td>
+        </tr>
+        <tr>
+            <th>Precio Base del Producto</th>
+            <td>${{ "{:,.2f}".format(calculo.precio_base) }}</td>
+        </tr>
+        <tr>
+            <th>Categoría del Impuesto</th>
+            <td>{{ calculo.nombre_impuesto }}</td>
+        </tr>
+        <tr>
+            <th>Valor del Impuesto</th>
+            <td>${{ "{:,.2f}".format(calculo.valor_impuesto) }}</td>
+        </tr>
+        <tr>
+            <th>Cantidad de Bolsas Plásticas</th>
+            <td>{{ calculo.cantidad_bolsas }}</td>
+        </tr>
+        <tr>
+            <th>Valor Impuesto Bolsas</th>
+            <td>${{ "{:,.2f}".format(calculo.valor_bolsas) }}</td>
+        </tr>
+        <tr class="total-row">
+            <th>TOTAL A PAGAR</th>
+            <td>${{ "{:,.2f}".format(calculo.total) }}</td>
+        </tr>
+    </table>
+    {% else %}
+    <div class="error-box">
+        No se encontró ningún cálculo con el identificador <strong>"{{ id_buscado }}"</strong> en la base de datos.
+    </div>
+    {% endif %}
+
+    <p>
+        <a href="/" class="btn-back">← Volver al Menú Principal</a>
+    </p>
+</div>
+
+</body>
+</html>

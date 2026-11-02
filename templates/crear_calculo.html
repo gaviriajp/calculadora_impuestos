@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Impuestos - Aplicación Web</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #0b3954;
+        }
+        .nav-menu {
+            background-color: #087e8b;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 4px;
+        }
+        .nav-menu a:hover {
+            background-color: #055a63;
+        }
+        .card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            background-color: #fafafa;
+        }
+        table {
+            width: 100%;
+            margin-top: 10px;
+        }
+        td {
+            padding: 8px;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn-submit {
+            background-color: #087e8b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background-color: #055a63;
+        }
+        .btn-search {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-search:hover {
+            background-color: #1b5e20;
+        }
+        .notice-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 12px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Calculadora de Impuestos de Venta</h1>
+    <p>Sistema Web con persistencia en Base de Datos PostgreSQL usando patrón MVC.</p>
+
+    <!-- Menú de Inicio -->
+    <div class="nav-menu">
+        <a href="#seccion-insertar">Calcular e Insertar</a>
+        <a href="#seccion-buscar">Buscar en BD</a>
+        <a href="/crear_tablas">Crear Tablas en BD</a>
+    </div>
+
+    <!-- Sección de Buscar -->
+    <div class="card" id="seccion-buscar">
+        <h2>Buscar Cálculo en la Base de Datos</h2>
+        <form action="/buscar_calculo" method="GET">
+            <p>Escriba el identificador único del cálculo guardado:</p>
+            <table style="width: auto;">
+                <tr>
+                    <td><input type="text" name="id_buscado" placeholder="Ejemplo: CALC-001" required style="width: 280px;" /></td>
+                    <td><button type="submit" class="btn-search">Buscar Cálculo</button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <!-- Sección de Insertar / Calcular -->
+    <div class="card" id="seccion-insertar">
+        <h2>Insertar un Nuevo Cálculo de Impuesto</h2>
+        <form action="/guardar_calculo" method="POST">
+            <table>
+                <tr>
+                    <td><strong>Identificador (ID):</strong></td>
+                    <td><input type="text" name="id_calculo" placeholder="Ej: CALC-001" required /></td>
+                </tr>
+                <tr>
+                    <td><strong>Precio del producto ($):</strong></td>
+                    <td><input type="number" step="any" name="precio" placeholder="Ej: 100000" required /></td>
+                </tr>
+                <tr>
+                    <td><strong>Categoría del Impuesto:</strong></td>
+                    <td>
+                        <select name="tipo_impuesto" required>
+                            <option value="iva19">IVA General (19%)</option>
+                            <option value="iva5">IVA Reducido (5%)</option>
+                            <option value="inc">Impuesto Nacional al Consumo - INC (8%)</option>
+                            <option value="licor">Impuesto a Licores (25%)</option>
+                            <option value="exento">Exento (0%)</option>
+                            <option value="excluido">Excluido (0%)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>¿Incluye bolsas plásticas?</strong></td>
+                    <td>
+                        <input type="checkbox" id="incluye_bolsas" name="incluye_bolsas" onchange="toggleBolsas(this.checked)" />
+                        <label for="incluye_bolsas">Sí, agregar impuesto por bolsas ($73 c/u)</label>
+                    </td>
+                </tr>
+                <tr id="fila_bolsas" style="display: none;">
+                    <td><strong>Cantidad de bolsas:</strong></td>
+                    <td><input type="number" id="cantidad_bolsas" name="cantidad_bolsas" value="0" min="0" /></td>
+                </tr>
+            </table>
+
+            <br>
+            <input type="submit" class="btn-submit" value="Calcular y Guardar en BD" />
+        </form>
+    </div>
+
+    <!-- Opción para crear tablas de BD -->
+    <div class="notice-box">
+        <strong>Inicialización de la Base de Datos:</strong>
+        <p>Si es la primera vez que ejecuta esta aplicación o la base de datos está en blanco, puede inicializar las tablas necesarias haciendo <a href="/crear_tablas"><strong>click aquí para crear las tablas</strong></a>.</p>
+    </div>
+</div>
+
+<script>
+    function toggleBolsas(activo) {
+        var fila = document.getElementById("fila_bolsas");
+        var inputBolsas = document.getElementById("cantidad_bolsas");
+        if (activo) {
+            fila.style.display = "table-row";
+            if (inputBolsas.value == "0") inputBolsas.value = "1";
+        } else {
+            fila.style.display = "none";
+            inputBolsas.value = "0";
+        }
+    }
+</script>
+
+</body>
+</html>
