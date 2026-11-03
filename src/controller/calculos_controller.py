@@ -25,19 +25,26 @@ class CalculosController:
     @classmethod
     def obtener_cursor(cls):
         """Crea la conexión a la base de datos PostgreSQL y retorna un cursor."""
+        # Priorizar variables de entorno de Render / Hosting o secret_config
+        host = os.environ.get("PGHOST") or getattr(secret_config, "PGHOST", "localhost")
+        database = os.environ.get("PGDATABASE") or getattr(secret_config, "PGDATABASE", "")
+        user = os.environ.get("PGUSER") or getattr(secret_config, "PGUSER", "")
+        password = os.environ.get("PGPASSWORD") or getattr(secret_config, "PGPASSWORD", "")
+        port = os.environ.get("PGPORT") or getattr(secret_config, "PGPORT", 5432)
+        sslmode = os.environ.get("PGSSLMODE") or getattr(secret_config, "PGSSLMODE", None)
+
         params = {
-            "database": secret_config.PGDATABASE,
-            "user": secret_config.PGUSER,
-            "password": secret_config.PGPASSWORD,
-            "host": secret_config.PGHOST,
-            "port": secret_config.PGPORT,
+            "database": database,
+            "user": user,
+            "password": password,
+            "host": host,
+            "port": int(port),
         }
-        if hasattr(secret_config, "PGSSLMODE") and secret_config.PGSSLMODE:
-            params["sslmode"] = secret_config.PGSSLMODE
+        if sslmode:
+            params["sslmode"] = sslmode
 
         connection = psycopg2.connect(**params)
         return connection.cursor()
-
 
     @classmethod
     def crear_tabla(cls):
