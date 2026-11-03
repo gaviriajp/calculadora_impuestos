@@ -8,7 +8,13 @@ sys.path.append("src")
 
 from model.calculo_impuesto import CalculoImpuesto
 from model import calculadora_impuestos as calc
-from controller.calculos_controller import CalculosController
+from controller.calculos_controller import (
+    CalculosController,
+    CalculoNoEncontradoError,
+    CalculoYaExisteError,
+    ErrorBaseDatos,
+    DatosCalculoInvalidosError
+)
 
 # Blueprint para la vista web de calculos
 vista = Blueprint("vista_calculos", __name__)
@@ -98,10 +104,14 @@ def guardar_calculo():
         </div>
         """
 
+    except CalculoYaExisteError as error:
+        return f"Error: {error} <br><br><a href='/'>Volver al formulario</a>"
     except calc.PrecioInvalidoError as error:
         return f"Error en precio: {error} <br><br><a href='/'>Volver al formulario</a>"
     except calc.ImpuestoInvalidoError as error:
         return f"Error en impuestos: {error} <br><br><a href='/'>Volver al formulario</a>"
+    except (ErrorBaseDatos, DatosCalculoInvalidosError) as error:
+        return f"Error en base de datos: {error} <br><br><a href='/'>Volver al formulario</a>"
     except Exception as error:
         return f"No es posible guardar el cálculo en la base de datos: {error} <br><br><a href='/'>Volver al formulario</a>"
 
@@ -117,6 +127,10 @@ def buscar_calculo():
         calculo_encontrado = CalculosController.buscar_calculo(id_buscado)
         return render_template("calculo_buscado.html", calculo=calculo_encontrado, id_buscado=id_buscado)
 
+    except CalculoNoEncontradoError as error:
+        return render_template("calculo_buscado.html", calculo=None, id_buscado=id_buscado)
+    except ErrorBaseDatos as error:
+        return f"Error de conexión con la base de datos: {error} <br><br><a href='/'>Volver al formulario</a>"
     except Exception as error:
         return f"No es posible buscar el cálculo: {error} <br><br><a href='/'>Volver al formulario</a>"
 
