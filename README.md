@@ -27,8 +27,20 @@ La lógica de negocio se encuentra separada de las interfaces de usuario, permit
 
 ## Arquitectura del Proyecto
 
-```text
+`	ext
 calculadora_impuestos/
+├── app.py
+│   # Punto de entrada para la aplicación Web Flask (MVC con Blueprints)
+│
+├── requirements.txt
+│   # Dependencias del proyecto (Flask, psycopg2-binary, gunicorn)
+│
+├── templates/
+│   ├── crear_calculo.html
+│   │   # Formulario web para calcular, insertar y enlace para crear tablas
+│   └── calculo_buscado.html
+│       # Vista web con el desglose del cálculo consultado
+│
 ├── secret_config_sample.py
 │   # Plantilla con variables de conexión a PostgreSQL
 │
@@ -52,6 +64,11 @@ calculadora_impuestos/
 │   │
 │   └── view/
 │       ├── __init__.py
+│       ├── web/
+│       │   ├── __init__.py
+│       │   └── vista_calculos.py
+│       │       # Blueprint de Flask con rutas /, /guardar_calculo, /buscar_calculo y /crear_tablas
+│       │
 │       ├── console/
 │       │   ├── __init__.py
 │       │   └── consola_calculadora.py
@@ -72,7 +89,7 @@ calculadora_impuestos/
 └── doc/
     ├── Casos de prueba calculadora impuestos.xlsx
     └── Entrevista.mp4
-```
+`
 
 La aplicación utiliza una separación entre la lógica de negocio y las interfaces de usuario.
 
@@ -751,4 +768,24 @@ Funciones de persistencia en la GUI:
 - **ID del cálculo (BD)**: Ingrese un identificador único (ej. `CALC-001`).
 - **Botón "Guardar en BD"**: Inserta el cálculo actual en la base de datos PostgreSQL.
 - **Sección "Buscar ID en BD"**: Ingrese el ID del cálculo y presione el botón **"Buscar"** para recuperar los datos desde la base de datos y cargarlos en pantalla.
-
+
+#### 3. Aplicación Web (Flask con Blueprints)
+Permite acceder a todas las funcionalidades del sistema mediante un navegador web, estructurado bajo el patrón MVC con Blueprints:
+
+`ash
+python app.py
+`
+
+La aplicación iniciará en http://localhost:5000/ y cuenta con:
+- **Menú de Inicio**: Enlaces rápidos a las secciones de cálculo/inserción, búsqueda y administración de base de datos.
+- **Opción para Crear Tablas**: Enlace /crear_tablas que inicializa automáticamente la base de datos si está en blanco.
+- **Funcionalidad Web Principal y Guardar**: Formulario interactivo para ingresar precio, tipo de impuesto y bolsas plásticas, calculando el total y persistiendo el registro en PostgreSQL (/guardar_calculo).
+- **Funcionalidad Web para Buscar**: Formulario para consultar cálculos por su ID (/buscar_calculo), presentando una tabla detallada con los valores registrados.
+
+### Despliegue en la Web (Nube)
+
+La aplicación web está configurada para desplegarse fácilmente en plataformas como **Render**:
+- **Build Command**: pip install -r requirements.txt
+- **Start Command**: gunicorn app:app
+- **Variables de Entorno**: Configure las credenciales de PostgreSQL (PGHOST, PGDATABASE, PGUSER, PGPASSWORD, PGPORT, PGSSLMODE).
+
