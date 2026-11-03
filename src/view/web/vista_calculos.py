@@ -16,7 +16,7 @@ vista = Blueprint("vista_calculos", __name__)
 
 @vista.route('/')
 def inicio():
-    """Ruta principal con menú de inicio, formularios de calcular/insertar y buscar."""
+    """Ruta principal con menú de inicio, formularios de calcular/insertar, buscar y gestión de tablas."""
     return render_template("crear_calculo.html")
 
 
@@ -136,3 +136,20 @@ def crear_tablas():
         """
     except Exception as error:
         return f"No es posible crear las tablas: {error} <br><br><a href='/'>Volver al formulario</a>"
+
+
+@vista.route('/borrar_tablas')
+def borrar_tablas():
+    """Elimina las tablas en la base de datos PostgreSQL si existen."""
+    try:
+        CalculosController.borrar_tabla()
+        return """
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; border: 1px solid #d32f2f; border-radius: 8px; background-color: #fffbfa;">
+            <h2 style="color: #c62828;">¡Tablas eliminadas exitosamente!</h2>
+            <p>La tabla <code>calculos</code> ha sido eliminada de la base de datos PostgreSQL.</p>
+            <br>
+            <a href="/" style="display: inline-block; padding: 10px 15px; background-color: #0288d1; color: white; text-decoration: none; border-radius: 4px;">Volver al Menú Principal</a>
+        </div>
+        """
+    except Exception as error:
+        return f"No es posible eliminar las tablas: {error} <br><br><a href='/'>Volver al formulario</a>"
