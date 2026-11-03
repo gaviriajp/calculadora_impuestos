@@ -27,20 +27,8 @@ La lógica de negocio se encuentra separada de las interfaces de usuario, permit
 
 ## Arquitectura del Proyecto
 
-`	ext
+```text
 calculadora_impuestos/
-├── app.py
-│   # Punto de entrada para la aplicación Web Flask (MVC con Blueprints)
-│
-├── requirements.txt
-│   # Dependencias del proyecto (Flask, psycopg2-binary, gunicorn)
-│
-├── templates/
-│   ├── crear_calculo.html
-│   │   # Formulario web para calcular, insertar y enlace para crear tablas
-│   └── calculo_buscado.html
-│       # Vista web con el desglose del cálculo consultado
-│
 ├── secret_config_sample.py
 │   # Plantilla con variables de conexión a PostgreSQL
 │
@@ -64,11 +52,6 @@ calculadora_impuestos/
 │   │
 │   └── view/
 │       ├── __init__.py
-│       ├── web/
-│       │   ├── __init__.py
-│       │   └── vista_calculos.py
-│       │       # Blueprint de Flask con rutas /, /guardar_calculo, /buscar_calculo y /crear_tablas
-│       │
 │       ├── console/
 │       │   ├── __init__.py
 │       │   └── consola_calculadora.py
@@ -89,7 +72,7 @@ calculadora_impuestos/
 └── doc/
     ├── Casos de prueba calculadora impuestos.xlsx
     └── Entrevista.mp4
-`
+```
 
 La aplicación utiliza una separación entre la lógica de negocio y las interfaces de usuario.
 
