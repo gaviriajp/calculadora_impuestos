@@ -759,7 +759,7 @@ Permite acceder a todas las funcionalidades del sistema mediante un navegador we
 python app.py
 `
 
-La aplicación iniciará en http://localhost:5000/ y cuenta con:
+La aplicación iniciará en https://calculadora-impuestos-r6by.onrender.com y cuenta con:
 - **Menú de Inicio**: Enlaces rápidos a las secciones de cálculo/inserción, búsqueda y administración de base de datos.
 - **Opción para Crear Tablas**: Enlace /crear_tablas que inicializa automáticamente la base de datos si está en blanco.
 - **Funcionalidad Web Principal y Guardar**: Formulario interactivo para ingresar precio, tipo de impuesto y bolsas plásticas, calculando el total y persistiendo el registro en PostgreSQL (/guardar_calculo).
